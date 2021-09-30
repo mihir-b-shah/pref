@@ -1,0 +1,34 @@
+#include "cache.h"
+#include "sisb.h"
+#define DEGREE 2
+
+void CACHE::l2c_prefetcher_initialize() 
+{
+    sisb_prefetcher_initialize();
+}
+
+uint32_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, uint8_t type, uint32_t metadata_in)
+{
+    static bool started = false;
+
+    if(started == false){
+        started = true;
+        return metadata_in;
+    }
+    vector<uint64_t> sisb_candidates;
+    sisb_prefetcher_operate(addr, ip, cache_hit, type, DEGREE, sisb_candidates);
+    for(uint32_t i=0; i<sisb_candidates.size(); i++)
+        prefetch_line(ip, addr, sisb_candidates[i], FILL_L2, 0);
+    return metadata_in;
+}
+
+uint32_t CACHE::l2c_prefetcher_cache_fill(uint64_t addr, uint32_t set, uint32_t way, uint8_t prefetch, uint64_t evicted_addr, uint32_t metadata_in)
+{
+    sisb_prefetcher_cache_fill(addr, set, way, prefetch, evicted_addr);
+    return metadata_in;
+}
+
+void CACHE::l2c_prefetcher_final_stats()
+{
+    sisb_prefetcher_final_stats();
+}

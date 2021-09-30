@@ -1,0 +1,33 @@
+#include "bo.h" 
+#define DEGREE 2
+
+void CACHE::l2c_prefetcher_initialize() 
+{
+	bo_prefetcher_initialize();
+}
+
+uint32_t CACHE::l2c_prefetcher_operate(uint64_t addr, uint64_t ip, uint8_t cache_hit, uint8_t type, uint32_t metadata_in)
+{
+    static bool first = true;
+    if(first){
+        first = false;
+        return metadata_in;
+    }
+
+    vector<uint64_t> bo_candidates;
+    bo_prefetcher_operate(this, addr, ip, cache_hit);
+    for(uint32_t i=0; i<bo_candidates.size(); i++)
+        prefetch_line(ip, addr, bo_candidates[i], FILL_L2, 0);
+    return metadata_in;
+}
+
+uint32_t CACHE::l2c_prefetcher_cache_fill(uint64_t addr, uint32_t set, uint32_t way, uint8_t prefetch, uint64_t evicted_addr, uint32_t metadata_in)
+{
+    bo_prefetcher_cache_fill(this, addr, set, way, prefetch, evicted_addr);
+    return metadata_in;
+}
+
+void CACHE::l2c_prefetcher_final_stats()
+{
+	bo_prefetcher_final_stats();
+}
