@@ -112,6 +112,10 @@ class CACHE : public MEMORY {
     uint32_t reads_available_this_cycle;
     uint8_t cache_type;
 
+    // callbacks
+    void *cb_state;
+    void (*cb)(CACHE* cache, void* cb_state);
+
     // prefetch stats
     uint64_t pf_requested,
              pf_issued,

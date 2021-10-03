@@ -4,6 +4,8 @@
 #include "ooo_cpu.h"
 #include "uncore.h"
 #include <fstream>
+#include <string>
+#include <builder.h>
 
 uint8_t warmup_complete[NUM_CPUS], 
         simulation_complete[NUM_CPUS], 
@@ -760,6 +762,21 @@ int main(int argc, char** argv)
         ooo_cpu[i].L2C.upper_level_dcache[i] = &ooo_cpu[i].L1D;
         ooo_cpu[i].L2C.lower_level = &uncore.LLC;
         ooo_cpu[i].L2C.l2c_prefetcher_initialize();
+
+        // CALLBACKS
+        ooo_cpu[i].L2C.cb = update_graph; 
+        ooo_cpu[i].L2C.cb_state = new DFGraph(&ooo_cpu[i]);
+        
+        // read stream of misses
+        {
+          std::ifstream fin("cache_misses");
+          std::string buf;
+
+          while(std::getline(fin, buf)){
+            DFGraph* state = static_cast<DFGraph*>(ooo_cpu[i].L2C.cb_state);
+            state->misses.push(static_cast<uint64_t>(strtol(buf.c_str(), NULL, 0)));
+          }
+        }
 
         // SHARED CACHE
         uncore.LLC.cache_type = IS_LLC;

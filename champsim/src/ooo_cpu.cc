@@ -1810,6 +1810,7 @@ void O3_CPU::operate_cache()
     STLB.operate();
     L1I.operate();
     L1D.operate();
+
     L2C.operate();
 
     // also handle per-cycle prefetcher operation

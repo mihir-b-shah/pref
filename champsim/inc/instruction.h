@@ -26,12 +26,16 @@
 #define BRANCH_OTHER         7
 
 #include "set.h"
+#include <iostream>
 
 class input_instr {
   public:
 
     // instruction pointer or PC (Program Counter)
     uint64_t ip;
+    
+    uint64_t offset1;
+    uint64_t offset2;
 
     // branch info
     uint8_t is_branch;
@@ -45,6 +49,10 @@ class input_instr {
 
     input_instr() {
         ip = 0;
+      
+        offset1 = -1;
+        offset2 = -1;
+
         is_branch = 0;
         branch_taken = 0;
 
@@ -102,6 +110,8 @@ class ooo_model_instr {
   public:
     uint64_t instr_id,
              ip,
+             offset1,
+             offset2,
              fetch_producer,
              producer_id,
              translated_cycle,
@@ -171,6 +181,8 @@ class ooo_model_instr {
 
     ooo_model_instr() {
         instr_id = 0;
+        offset1 = -1;
+        offset2 = -1;
         ip = 0;
         fetch_producer = 0;
         producer_id = 0;
@@ -241,31 +253,31 @@ class ooo_model_instr {
 
   void print_instr()
   {
-    cout << "*** " << instr_id << " ***" << endl;
-    cout << hex << "0x" << (uint64_t)ip << dec << endl;
-    cout << (uint32_t)is_branch << " " << (uint32_t)branch_taken << endl;
+    std::cout << "*** " << instr_id << " ***" << std::endl;
+    std::cout << std::hex << "0x" << (uint64_t)ip << std::dec << std::endl;
+    std::cout << (uint32_t)is_branch << " " << (uint32_t)branch_taken << std::endl;
     for(uint32_t i=0; i<NUM_INSTR_SOURCES; i++)
       {
-	cout << (uint32_t)source_registers[i] << " ";
+	std::cout << (uint32_t)source_registers[i] << " ";
       }
-    cout << endl;
+    std::cout << std::endl;
     for(uint32_t i=0; i<NUM_INSTR_SOURCES; i++)
       {
-	cout << hex << "0x" << (uint32_t)source_memory[i] << dec << " ";
+	std::cout << std::hex << "0x" << (uint32_t)source_memory[i] << std::dec << " ";
       }
-    cout << endl;
+    std::cout << std::endl;
     for(uint32_t i=0; i<NUM_INSTR_DESTINATIONS; i++)
       {
-	cout << (uint32_t)destination_registers[i] << " ";
+	std::cout << (uint32_t)destination_registers[i] << " ";
       }
-    cout << endl;
+    std::cout << std::endl;
     for(uint32_t i=0; i<NUM_INSTR_DESTINATIONS; i++)
       {
-        cout << hex << "0x" << (uint32_t)destination_memory[i] << dec << " ";
+        std::cout << std::hex << "0x" << (uint32_t)destination_memory[i] << std::dec << " ";
       }
-    cout << endl;
+    std::cout << std::endl;
     
-    cout << endl;
+    std::cout << std::endl;
   }
 };
 

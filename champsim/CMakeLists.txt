@@ -6,6 +6,8 @@ project(champsim CXX)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+find_package(igraph REQUIRED)
+
 include_directories(inc)
 
 add_subdirectory(src)
@@ -14,4 +16,4 @@ add_subdirectory(replacement)
 add_subdirectory(prefetcher)
 
 add_executable(champsim src/main.cc)
-target_link_libraries(champsim src branch replacement prefetcher)
+target_link_libraries(champsim src branch replacement prefetcher igraph::igraph)

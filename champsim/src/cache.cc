@@ -540,6 +540,9 @@ void CACHE::handle_read()
             uint32_t set = get_set(RQ.entry[index].address);
             int way = check_hit(&RQ.entry[index]);
 
+            // builds up the graph.
+            this->cb(this, this->cb_state);
+
             if (way >= 0) {
               // was the value we hit, a prefetched value.
               //this->prefetch_ctrs.corr(RQ.entry[index].ip);
