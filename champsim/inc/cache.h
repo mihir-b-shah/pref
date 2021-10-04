@@ -147,6 +147,9 @@ class CACHE : public MEMORY {
 
         LATENCY = 0;
 
+        cb_state = nullptr;
+        cb = nullptr;
+
         // cache block
         block = new BLOCK* [NUM_SET];
         for (uint32_t i=0; i<NUM_SET; i++) {
