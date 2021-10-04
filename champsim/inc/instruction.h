@@ -34,9 +34,6 @@ class input_instr {
     // instruction pointer or PC (Program Counter)
     uint64_t ip;
     
-    uint64_t offset1;
-    uint64_t offset2;
-
     // branch info
     uint8_t is_branch;
     uint8_t branch_taken;
@@ -50,9 +47,6 @@ class input_instr {
     input_instr() {
         ip = 0;
       
-        offset1 = -1;
-        offset2 = -1;
-
         is_branch = 0;
         branch_taken = 0;
 

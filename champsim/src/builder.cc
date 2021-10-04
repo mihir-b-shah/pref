@@ -1,5 +1,6 @@
 
 #include <stdexcept>
+#include <cstdio>
 #include "builder.h"
 #include "ooo_cpu.h"
 
@@ -17,9 +18,6 @@ ooo_model_instr copy_into_format (input_instr current_instr) {
     arch_instr.ip = current_instr.ip;
     arch_instr.is_branch = current_instr.is_branch;
     arch_instr.branch_taken = current_instr.branch_taken;
-
-    arch_instr.offset1 = current_instr.offset1;
-    arch_instr.offset2 = current_instr.offset2;
 
     // arch_instr.asid[0] = cpu;
     // arch_instr.asid[1] = cpu;
@@ -333,6 +331,14 @@ void DFGraph::build_graph(){
 
 // called just when we transitioned, onto the next instruction.
 void update_graph(CACHE* cache, void* state){
+  static int ctr = 0;
+  ctr++;
+
+  if(ctr % 1000 == 0){
+    std::printf("Called ctr: %d\n", ctr);
+  }
+
+  /*
   static const size_t max_window_size = 1000;
 
   DFGraph* dfg = static_cast<DFGraph*>(state);  
@@ -354,4 +360,5 @@ void update_graph(CACHE* cache, void* state){
     dfg->build_graph();
     dfg->misses.pop();
   }
+  */
 }

@@ -541,7 +541,9 @@ void CACHE::handle_read()
             int way = check_hit(&RQ.entry[index]);
 
             // builds up the graph.
-            this->cb(this, this->cb_state);
+            if(this->cb != nullptr){
+              this->cb(this, this->cb_state);
+            }
 
             if (way >= 0) {
               // was the value we hit, a prefetched value.
