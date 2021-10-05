@@ -82,22 +82,27 @@ extern uint32_t PAGE_TABLE_LATENCY, SWAP_LATENCY;
 class PrefFreqCtrs {
 private:
   struct FreqCtr {
-    uint32_t corr;
-    uint32_t inc;
+    uint32_t useful;
+    uint32_t useless;
+    uint32_t hit;
+    uint32_t miss;
+    uint32_t nonp_hit;
     
-    FreqCtr() : corr(0), inc(0) {}
+    FreqCtr() : useful(0), useless(0), hit(0), miss(0), nonp_hit(0) {}
+
+    double acc(){ return useful+useless == 0 ? 0.0 : (double) useful/(useful+useless); }
+    double cov(){ return hit+miss == 0 ? 0.0 : (double) hit/(hit+miss); }
+    uint32_t wt(){ return hit+miss+nonp_hit; } 
   };
 
 public:
   std::unordered_map<uint64_t, FreqCtr> freqs;
 
-  void corr(uint64_t pc){
-    freqs[pc].corr += 1;
-  }
-  
-  void inc(uint64_t pc){
-    freqs[pc].inc += 1;
-  }
+  void useful(uint64_t pc){ freqs[pc].useful += 1; }
+  void useless(uint64_t pc){ freqs[pc].useless += 1; }
+  void hit(uint64_t pc){ freqs[pc].hit += 1; }
+  void nonp_hit(uint64_t pc){ freqs[pc].nonp_hit += 1; }
+  void miss(uint64_t pc){ freqs[pc].miss += 1; }
 };
 
 class CACHE : public MEMORY {
@@ -253,6 +258,9 @@ class CACHE : public MEMORY {
              find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type),
              llc_find_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type),
              lru_victim(uint32_t cpu, uint64_t instr_id, uint32_t set, const BLOCK *current_set, uint64_t ip, uint64_t full_addr, uint32_t type);
+
+    // run callback
+    void run_callback();
 };
 
 #endif

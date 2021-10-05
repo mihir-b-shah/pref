@@ -2,10 +2,15 @@
 import pandas as pd
 
 def _get_file_path(name):
-  return 'reports/' + name + '_report'
+  return '../reports/' + name + '_report'
+
+def _metric(name, ty):
+  return '%s_%s'%(name, ty)
 
 def _build_single_df(name):
-    return pd.read_csv(_get_file_path(name), header=0, names=['pc', name, 'wt_%s'%(name)])
+    return pd.read_csv(_get_file_path(name), header=0, names=[
+      'pc', _metric('acc', name), _metric('cov', name), _metric('wt', name)
+    ])
 
 def build_df(rep_names):
   iter_df = _build_single_df(rep_names[0])

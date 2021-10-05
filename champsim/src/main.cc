@@ -74,8 +74,11 @@ void write_freq_stats(uint32_t cpu, CACHE *cache, const char* fname){
   ofstream f(fname);
   auto& frmap = cache->prefetch_ctrs.freqs;
   for(auto iter = frmap.begin(); iter != frmap.end(); ++iter){
-    int wt = iter->second.corr + iter->second.inc;
-    double acc = (double) iter->second.corr/wt;
+    double acc = iter->second.acc();
+    double cov = iter->second.cov();
+    uint32_t wt = iter->second.wt();
+
+    f << iter->first << ',' << acc << ',' << cov << ',' << wt << '\n';
   }
 }
 

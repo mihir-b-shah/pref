@@ -16,7 +16,7 @@ for pref in $PREFETCHERS; do
     ./run_champsim.sh bimodal-no-no-${pref}-no-lru-1core 1 10 ${BENCHMARK_PATH}
     cp ${DATA_NAME} ${OUT_DIR}/${pref}_report
     rm ${DATA_NAME} ${BUILD_FILE}
-    echo "Completed for prefetecher ${pref}"
+    echo "Completed for prefetcher ${pref}"
   else
     echo "Unable to build champsim on prefetcher ${pref}, check ${BUILD_FILE}"
     break

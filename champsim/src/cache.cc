@@ -540,20 +540,14 @@ void CACHE::handle_read()
             uint32_t set = get_set(RQ.entry[index].address);
             int way = check_hit(&RQ.entry[index]);
 
-            // builds up the graph.
-            if(this->cb != nullptr){
-              this->cb(this, this->cb_state);
-            }
-
             if (way >= 0) {
-              // was the value we hit, a prefetched value.
-              //this->prefetch_ctrs.corr(RQ.entry[index].ip);
               if (block[set][way].sticky_prefetch) {
-                this->prefetch_ctrs.corr(RQ.entry[index].ip);
+                this->prefetch_ctrs.hit(RQ.entry[index].ip);
+              } else {
+                this->prefetch_ctrs.nonp_hit(RQ.entry[index].ip);
               }
             } else {
-              // cache miss- prefetch did not work.
-              this->prefetch_ctrs.inc(RQ.entry[index].ip);
+              this->prefetch_ctrs.miss(RQ.entry[index].ip);
             }
 
             if (way >= 0) { // read hit
@@ -633,6 +627,8 @@ void CACHE::handle_read()
 
                 // update prefetch stats and reset prefetch bit
                 if (block[set][way].prefetch) {
+                    // graph is up-to-date.
+                    this->prefetch_ctrs.useful(RQ.entry[index].ip);
                     pf_useful++;
                     block[set][way].prefetch = 0;
                 }
@@ -1062,6 +1058,8 @@ void CACHE::handle_prefetch()
 
 void CACHE::operate()
 {
+    run_callback();  // builds the graph up to this point.
+
     handle_fill();
     handle_writeback();
     reads_available_this_cycle = MAX_READ;
@@ -1105,6 +1103,7 @@ void CACHE::fill_cache(uint32_t set, uint32_t way, PACKET *packet)
     }
 #endif
     if (block[set][way].prefetch && (block[set][way].used == 0)){
+        this->prefetch_ctrs.useless(packet->ip);
         pf_useless++;
     }
 
@@ -1771,4 +1770,12 @@ uint32_t CACHE::get_size(uint8_t queue_type, uint64_t address)
 void CACHE::increment_WQ_FULL(uint64_t address)
 {
     WQ.FULL++;
+}
+
+void CACHE::run_callback()
+{
+    // builds up the graph.
+    if(this->cb != nullptr){
+        this->cb(this, this->cb_state);
+    }
 }
