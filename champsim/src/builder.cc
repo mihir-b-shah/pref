@@ -331,14 +331,6 @@ void DFGraph::build_graph(){
 
 // called just when we transitioned, onto the next instruction.
 void update_graph(CACHE* cache, void* state){
-  static int ctr = 0;
-  ctr++;
-
-  if(ctr % 1000 == 0){
-    std::printf("Called ctr: %d\n", ctr);
-  }
-
-  /*
   static const size_t max_window_size = 1000;
 
   DFGraph* dfg = static_cast<DFGraph*>(state);  
@@ -360,5 +352,4 @@ void update_graph(CACHE* cache, void* state){
     dfg->build_graph();
     dfg->misses.pop();
   }
-  */
 }

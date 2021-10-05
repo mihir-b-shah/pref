@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CHAMPSIM_DIR="champsim"
-PREFETCHERS="bo"
+PREFETCHERS="bo sms ip_stride sisb"
 DATA_NAME="pref_track_data"
 OUT_DIR="../reports"
 BUILD_FILE="build_output"
@@ -10,7 +10,7 @@ PREV_DIR=$(pwd)
 
 cd ${CHAMPSIM_DIR}
 
-for pref in "$PREFETCHERS"; do
+for pref in $PREFETCHERS; do
   ./build_champsim.sh bimodal no no ${pref} no lru "1" &> ${BUILD_FILE}
   if [ $? -eq 0 ]; then
     ./run_champsim.sh bimodal-no-no-${pref}-no-lru-1core 1 10 ${BENCHMARK_PATH}
