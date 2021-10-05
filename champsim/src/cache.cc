@@ -42,6 +42,8 @@ void CACHE::handle_fill()
 
             // COLLECT STATS
             sim_miss[fill_cpu][MSHR.entry[mshr_index].type]++;
+            this->prefetch_ctrs.miss(&(MSHR.entry[mshr_index]));
+
             sim_access[fill_cpu][MSHR.entry[mshr_index].type]++;
 
             // check fill level
@@ -153,6 +155,8 @@ void CACHE::handle_fill()
 
             // COLLECT STATS
             sim_miss[fill_cpu][MSHR.entry[mshr_index].type]++;
+            this->prefetch_ctrs.miss(&(MSHR.entry[mshr_index]));
+
             sim_access[fill_cpu][MSHR.entry[mshr_index].type]++;
 
             fill_cache(set, way, &MSHR.entry[mshr_index]);
@@ -253,6 +257,8 @@ void CACHE::handle_writeback()
 
             // COLLECT STATS
             sim_hit[writeback_cpu][WQ.entry[index].type]++;
+            this->prefetch_ctrs.hit(&(WQ.entry[index]));
+
             sim_access[writeback_cpu][WQ.entry[index].type]++;
 
             // mark dirty
@@ -482,6 +488,8 @@ void CACHE::handle_writeback()
 
                     // COLLECT STATS
                     sim_miss[writeback_cpu][WQ.entry[index].type]++;
+                    this->prefetch_ctrs.miss(&(WQ.entry[index]));
+
                     sim_access[writeback_cpu][WQ.entry[index].type]++;
 
                     fill_cache(set, way, &WQ.entry[index]);
@@ -540,16 +548,6 @@ void CACHE::handle_read()
             uint32_t set = get_set(RQ.entry[index].address);
             int way = check_hit(&RQ.entry[index]);
 
-            if (way >= 0) {
-              if (block[set][way].sticky_prefetch) {
-                this->prefetch_ctrs.hit(RQ.entry[index].ip);
-              } else {
-                this->prefetch_ctrs.nonp_hit(RQ.entry[index].ip);
-              }
-            } else {
-              this->prefetch_ctrs.miss(RQ.entry[index].ip);
-            }
-
             if (way >= 0) { // read hit
 
                 if (cache_type == IS_ITLB) {
@@ -568,7 +566,7 @@ void CACHE::handle_read()
                     if (PROCESSED.occupancy < PROCESSED.SIZE)
                         PROCESSED.add_queue(&RQ.entry[index]);
                 }
-                //else if (cache_type == IS_L1D) {
+                //else if (cache_type == IS_L1D)
                 else if ((cache_type == IS_L1D) && (RQ.entry[index].type != PREFETCH)) {
                     if (PROCESSED.occupancy < PROCESSED.SIZE)
                         PROCESSED.add_queue(&RQ.entry[index]);
@@ -600,6 +598,8 @@ void CACHE::handle_read()
 
                 // COLLECT STATS
                 sim_hit[read_cpu][RQ.entry[index].type]++;
+                this->prefetch_ctrs.hit(&(RQ.entry[index]));
+
                 sim_access[read_cpu][RQ.entry[index].type]++;
 
                 // check fill level
@@ -867,6 +867,8 @@ void CACHE::handle_prefetch()
 
                 // COLLECT STATS
                 sim_hit[prefetch_cpu][PQ.entry[index].type]++;
+                this->prefetch_ctrs.hit(&(PQ.entry[index]));
+
                 sim_access[prefetch_cpu][PQ.entry[index].type]++;
 
                 // run prefetcher on prefetches from higher caches

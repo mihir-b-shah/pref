@@ -1,7 +1,7 @@
 #!/bin/bash
 
 CHAMPSIM_DIR="champsim"
-PREFETCHERS="bo sms ip_stride sisb"
+PREFETCHERS="no bo sisb sms ip_stride"
 DATA_NAME="pref_track_data"
 OUT_DIR="../reports"
 BUILD_FILE="build_output"

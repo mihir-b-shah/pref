@@ -86,13 +86,14 @@ private:
     uint32_t useless;
     uint32_t hit;
     uint32_t miss;
-    uint32_t nonp_hit;
     
-    FreqCtr() : useful(0), useless(0), hit(0), miss(0), nonp_hit(0) {}
+    FreqCtr() : useful(0), useless(0), hit(0), miss(0) {}
 
-    double acc(){ return useful+useless == 0 ? 0.0 : (double) useful/(useful+useless); }
-    double cov(){ return hit+miss == 0 ? 0.0 : (double) hit/(hit+miss); }
-    uint32_t wt(){ return hit+miss+nonp_hit; } 
+    double acc(){ return (double) useful/(useful+useless); }
+    uint32_t acc_wt(){ return useful+useless; }
+
+    uint32_t miss_ct(){ return miss; }
+    uint32_t miss_wt(){ return hit+miss; }
   };
 
 public:
@@ -101,8 +102,10 @@ public:
   void useful(uint64_t pc){ freqs[pc].useful += 1; }
   void useless(uint64_t pc){ freqs[pc].useless += 1; }
   void hit(uint64_t pc){ freqs[pc].hit += 1; }
-  void nonp_hit(uint64_t pc){ freqs[pc].nonp_hit += 1; }
   void miss(uint64_t pc){ freqs[pc].miss += 1; }
+
+  void hit(PACKET* p){ if(p->type != PREFETCH) this->hit(p->ip); }
+  void miss(PACKET* p){ if(p->type != PREFETCH) this->miss(p->ip); }
 };
 
 class CACHE : public MEMORY {
