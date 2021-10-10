@@ -1,13 +1,10 @@
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.10)
 
 project(champsim CXX) 
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
-#set(CMAKE_BUILD_TYPE RelWithDebInfo)
-
-find_package(igraph REQUIRED)
 
 include_directories(inc)
 
@@ -17,4 +14,4 @@ add_subdirectory(replacement)
 add_subdirectory(prefetcher)
 
 add_executable(champsim src/main.cc)
-target_link_libraries(champsim src branch replacement prefetcher igraph::igraph)
+target_link_libraries(champsim src branch replacement prefetcher)

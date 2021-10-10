@@ -5,6 +5,7 @@
 #include "uncore.h"
 #include <fstream>
 #include <string>
+#include <cstring>
 #include <builder.h>
 
 uint8_t warmup_complete[NUM_CPUS], 
@@ -70,8 +71,17 @@ void print_roi_stats(uint32_t cpu, CACHE *cache)
     //cout << " AVERAGE MISS LATENCY: " << (cache->total_miss_latency)/TOTAL_MISS << " cycles " << cache->total_miss_latency << "/" << TOTAL_MISS<< endl;
 }
 
-void write_freq_stats(uint32_t cpu, CACHE *cache, const char* fname){
-  ofstream f(fname);
+void write_freq_stats(uint32_t cpu, CACHE *cache, char* exe_name){
+  char* pref_name;
+  strtok(exe_name, "-");
+  for(size_t i = 0; i<3; ++i){
+    pref_name = strtok(NULL, "-");
+  }
+
+  char real_name[21];
+  sprintf(real_name, "../reports/%s_report", pref_name);
+
+  ofstream f(const_cast<const char*>(real_name));
   auto& frmap = cache->prefetch_ctrs.freqs;
   for(auto iter = frmap.begin(); iter != frmap.end(); ++iter){
     f << iter->first << ',' << 
@@ -976,7 +986,7 @@ int main(int argc, char** argv)
         print_roi_stats(i, &ooo_cpu[i].L1I);
         print_roi_stats(i, &ooo_cpu[i].L2C);
 
-        write_freq_stats(i, &ooo_cpu[i].L2C, "pref_track_data");
+        write_freq_stats(i, &ooo_cpu[i].L2C, argv[0]);
 
 #endif
         print_roi_stats(i, &uncore.LLC);
