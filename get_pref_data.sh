@@ -28,7 +28,7 @@ queue
 }
 
 CHAMPSIM_DIR="champsim"
-PREFETCHERS="bo no sisb sms ip_stride"
+PREFETCHERS="ip_stride" #"bo no sisb sms ip_stride"
 BUILD_FILE="build_output"
 BENCHMARK_PATH=$(basename $1)
 PREV_DIR=$(pwd)

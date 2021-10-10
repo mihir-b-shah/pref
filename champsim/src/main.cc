@@ -78,7 +78,7 @@ void write_freq_stats(uint32_t cpu, CACHE *cache, char* exe_name){
     pref_name = strtok(NULL, "-");
   }
 
-  char real_name[21];
+  char real_name[51];
   sprintf(real_name, "../reports/%s_report", pref_name);
 
   ofstream f(const_cast<const char*>(real_name));

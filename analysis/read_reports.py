@@ -1,5 +1,7 @@
 
 import pandas as pd
+import numpy as np
+import re
 
 def _get_file_path(name):
   return '../reports/' + name + '_report'
@@ -30,12 +32,32 @@ def build_df(rep_names):
   _consolidate('wt_acc', rep_names, pd.DataFrame.mean, iter_df)
   _consolidate('wt_cov', rep_names, pd.DataFrame.mean, iter_df)
 
-  return iter_df
+  nn_reps = rep_names.copy()
+  nn_reps.remove('no')
 
-df = build_df(['no', 'bo', 'sisb', 'sms', 'ip_stride'])
-print('no: ' + str(sum(df['miss_no'])))
-print('bo: ' + str(sum(df['miss_bo'])))
-print('sms: ' + str(sum(df['miss_sms'])))
-print('ip_stride: ' + str(sum(df['miss_ip_stride'])))
-print('sisb: ' + str(sum(df['miss_sisb'])))
-print(df)
+  miss_names = _prepend('miss', nn_reps)
+  cov_names = _prepend('cov', nn_reps)
+
+  # build coverage
+  for miss_name, cov_name in zip(miss_names, cov_names):
+    iter_df[cov_name] = iter_df[miss_name]/iter_df['miss_no']
+    iter_df[cov_name] = 1-iter_df[cov_name]
+  
+  # drop miss names
+  iter_df.drop(miss_names, axis=1, inplace=True)
+  iter_df.drop(list(iter_df.filter(regex=r'.*_no')), axis=1, inplace=True)
+
+  iter_df = iter_df[~iter_df.isin([np.nan, np.inf, -np.inf, 0]).any(1)]
+  iter_df[cov_names] = iter_df[cov_names].clip(0,1)
+
+  acc_df = iter_df.filter(regex='(acc.*)|(pc)')
+  cov_df = iter_df.filter(regex='(cov.*)|(pc)')
+  
+  acc_df = acc_df.rename(columns=lambda x: x.replace(r'(acc)|_',''))
+  cov_df = cov_df.rename(columns=lambda x: x.replace(r'(cov)|_',''))
+  
+  return acc_df, cov_df
+
+def _print_full(df):
+  with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+    print(df)
