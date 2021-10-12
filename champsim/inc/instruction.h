@@ -104,8 +104,6 @@ class ooo_model_instr {
   public:
     uint64_t instr_id,
              ip,
-             offset1,
-             offset2,
              fetch_producer,
              producer_id,
              translated_cycle,
@@ -175,8 +173,6 @@ class ooo_model_instr {
 
     ooo_model_instr() {
         instr_id = 0;
-        offset1 = -1;
-        offset2 = -1;
         ip = 0;
         fetch_producer = 0;
         producer_id = 0;
