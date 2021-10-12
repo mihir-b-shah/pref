@@ -10,4 +10,8 @@ inc/champsim.h.bak
 bin/
 obj/
 dpc3_traces/
-results_250M/
+results*/
+
+cache_misses
+build_output
+job_file*
