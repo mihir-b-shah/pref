@@ -257,10 +257,9 @@ int instr_to_vertex(vertex_descriptor_t parent, ooo_model_instr instr, deque<ooo
 }
 
 // Builds the graph for the instructions in the trace window
-void DFGraph::build_graph(){
+void DFGraph::build_graph(uint64_t miss_pc){
     deque<ooo_model_instr>& trace_window = this->window;
     Graph* g = &(this->g);
-    uint64_t miss_pc = this->misses.front();
 
     // the possible constant source of the root
     vertex_descriptor_t offset;
@@ -348,8 +347,9 @@ void update_graph(CACHE* cache, void* state){
   }
   window.push_front(ooo_instr);
 
-  if(dfg->misses.front() == instr.ip){
-    dfg->build_graph();
-    dfg->misses.pop();
+  if(dfg->misses.find(instr.ip) != dfg->misses.end()){
+    dfg->build_graph(instr.ip);
+    // overwrite old one!
+    dfg->g = Graph()
   }
 }

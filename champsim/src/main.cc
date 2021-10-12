@@ -785,7 +785,7 @@ int main(int argc, char** argv)
 
           while(std::getline(fin, buf)){
             DFGraph* state = static_cast<DFGraph*>(ooo_cpu[i].L2C.cb_state);
-            state->misses.push(static_cast<uint64_t>(strtol(buf.c_str(), NULL, 0)));
+            state->misses.insert(static_cast<uint64_t>(strtol(buf.c_str(), NULL, 0)));
           }
         }
 

@@ -1,0 +1,59 @@
+Building single-core ChampSim...
+
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /u/mihirs/research/pref/champsim/bin
+Scanning dependencies of target prefetcher
+[  4%] Building CXX object prefetcher/CMakeFiles/prefetcher.dir/kpcp_util.cc.o
+[  9%] Building CXX object prefetcher/CMakeFiles/prefetcher.dir/l1d_prefetcher.cc.o
+[ 13%] Building CXX object prefetcher/CMakeFiles/prefetcher.dir/l1i_prefetcher.cc.o
+[ 18%] Building CXX object prefetcher/CMakeFiles/prefetcher.dir/l2c_prefetcher.cc.o
+[ 22%] Building CXX object prefetcher/CMakeFiles/prefetcher.dir/llc_prefetcher.cc.o
+[ 27%] Linking CXX static library libprefetcher.a
+[ 27%] Built target prefetcher
+Scanning dependencies of target src
+[ 31%] Building CXX object src/CMakeFiles/src.dir/block.cc.o
+[ 36%] Building CXX object src/CMakeFiles/src.dir/builder.cc.o
+[ 40%] Building CXX object src/CMakeFiles/src.dir/cache.cc.o
+[ 45%] Building CXX object src/CMakeFiles/src.dir/dram_controller.cc.o
+[ 50%] Building CXX object src/CMakeFiles/src.dir/graph.cc.o
+[ 54%] Building CXX object src/CMakeFiles/src.dir/main.cc.o
+In file included from /usr/include/getopt.h:24:0,
+                 from /u/mihirs/research/pref/champsim/src/main.cc:3:
+/usr/include/features.h:184:3: warning: #warning "_BSD_SOURCE and _SVID_SOURCE are deprecated, use _DEFAULT_SOURCE" [-Wcpp]
+ # warning "_BSD_SOURCE and _SVID_SOURCE are deprecated, use _DEFAULT_SOURCE"
+   ^~~~~~~
+[ 59%] Building CXX object src/CMakeFiles/src.dir/ooo_cpu.cc.o
+[ 63%] Building CXX object src/CMakeFiles/src.dir/uncore.cc.o
+[ 68%] Linking CXX static library libsrc.a
+[ 68%] Built target src
+Scanning dependencies of target branch
+[ 72%] Building CXX object branch/CMakeFiles/branch.dir/branch_predictor.cc.o
+[ 77%] Linking CXX static library libbranch.a
+[ 77%] Built target branch
+Scanning dependencies of target replacement
+[ 81%] Building CXX object replacement/CMakeFiles/replacement.dir/base_replacement.cc.o
+[ 86%] Building CXX object replacement/CMakeFiles/replacement.dir/llc_replacement.cc.o
+[ 90%] Linking CXX static library libreplacement.a
+[ 90%] Built target replacement
+Scanning dependencies of target champsim
+[ 95%] Building CXX object CMakeFiles/champsim.dir/src/main.cc.o
+In file included from /usr/include/getopt.h:24:0,
+                 from /u/mihirs/research/pref/champsim/src/main.cc:3:
+/usr/include/features.h:184:3: warning: #warning "_BSD_SOURCE and _SVID_SOURCE are deprecated, use _DEFAULT_SOURCE" [-Wcpp]
+ # warning "_BSD_SOURCE and _SVID_SOURCE are deprecated, use _DEFAULT_SOURCE"
+   ^~~~~~~
+[100%] Linking CXX executable champsim
+[100%] Built target champsim
+/u/mihirs/research/pref/champsim
+
+[1mChampSim is successfully built
+Branch Predictor: bimodal
+L1I Prefetcher: no
+L1D Prefetcher: no
+L2C Prefetcher: ip_stride
+LLC Prefetcher: no
+LLC Replacement: lru
+Cores: 1
+Binary: bin/bimodal-no-no-ip_stride-no-lru-1core
+

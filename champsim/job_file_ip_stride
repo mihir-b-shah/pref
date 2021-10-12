@@ -1,0 +1,20 @@
+
+#!/bin/bash
+
++Group="UNDER"
++Project="ARCHITECTURE"
++ProjectDescription="Architectural Simulation"
+
+universe=vanilla
+getenv=true
+Rank=Memory
+notification=Error
+notify_user=mihirs@cs.utexas.edu
+error=mihirs.CONDOR.ERR
+output=mihirs.CONDOR.OUT
+initial_dir=.
+executable=run_champsim.sh
+arguments=bimodal-no-no-ip_stride-no-lru-1core 1 1 620.omnetpp_s-874B.champsimtrace.xz
+
+queue
+    

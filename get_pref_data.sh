@@ -38,7 +38,7 @@ cd ${CHAMPSIM_DIR}
 for pref in $PREFETCHERS; do
   ./build_champsim.sh bimodal no no ${pref} no lru "1" &> ${BUILD_FILE}
   if [ $? -eq 0 ]; then
-    RUN_CMD="run_champsim.sh bimodal-no-no-${pref}-no-lru-1core 1 250 ${BENCHMARK_PATH}"
+    RUN_CMD="run_champsim.sh bimodal-no-no-${pref}-no-lru-1core 1 1 ${BENCHMARK_PATH}"
     JOB_FILE="job_file_$pref"
 
     genTempl "." ${RUN_CMD} >${JOB_FILE}
