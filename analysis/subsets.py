@@ -12,9 +12,10 @@ def _int_to_bool_arr(v,l):
   return ret
 
 def subset_analyze(df):
+  pf_df = df.drop(['wt', 'pc'], axis=1)
   for mask in range(1,16):
-    cols = df.columns[_int_to_bool_arr(mask << 1, len(df.columns))]
-    best = df[cols].idxmax(axis=1)
+    cols = pf_df.columns[_int_to_bool_arr(mask, len(pf_df.columns))]
+    best = pf_df[cols].idxmax(axis=1)
     best_with_weights = pd.concat([best, df['wt']], axis=1)
     
     print(list(cols))

@@ -1,7 +1,6 @@
 
 import pandas as pd
 import numpy as np
-import re
 
 def _get_file_path(name):
   return '../reports/' + name + '_report'
@@ -14,7 +13,7 @@ def _prepend(pp, names):
 
 def _build_single_df(name):
     return pd.read_csv(_get_file_path(name), header=0, names=[
-      'pc', _metric('acc', name), _metric('wt_acc', name), _metric('miss', name), _metric('wt_cov', name)
+      'pc', _metric('acc', name), _metric('acc_wt', name), _metric('miss', name), _metric('cov_wt', name)
     ])
 
 def _consolidate(header, rep_names, func, df):
@@ -29,8 +28,8 @@ def build_df(rep_names):
     iter_df = iter_df.merge(_build_single_df(rep_names[i]), on='pc')
 
   # consolidate weights
-  _consolidate('wt_acc', rep_names, pd.DataFrame.mean, iter_df)
-  _consolidate('wt_cov', rep_names, pd.DataFrame.mean, iter_df)
+  _consolidate('acc_wt', rep_names, pd.DataFrame.mean, iter_df)
+  _consolidate('cov_wt', rep_names, pd.DataFrame.mean, iter_df)
 
   nn_reps = rep_names.copy()
   nn_reps.remove('no')
@@ -50,11 +49,8 @@ def build_df(rep_names):
   iter_df = iter_df[~iter_df.isin([np.nan, np.inf, -np.inf, 0]).any(1)]
   iter_df[cov_names] = iter_df[cov_names].clip(0,1)
 
-  acc_df = iter_df.filter(regex='(acc.*)|(pc)')
-  cov_df = iter_df.filter(regex='(cov.*)|(pc)')
-  
-  acc_df = acc_df.rename(columns=lambda x: x.replace(r'(acc)|_',''))
-  cov_df = cov_df.rename(columns=lambda x: x.replace(r'(cov)|_',''))
+  acc_df = iter_df.filter(regex='(acc.*)|(pc)').rename(columns=lambda x: x.replace('acc_',''))
+  cov_df = iter_df.filter(regex='(cov.*)|(pc)').rename(columns=lambda x: x.replace('cov_',''))
   
   return acc_df, cov_df
 
